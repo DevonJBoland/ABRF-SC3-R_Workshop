@@ -1,0 +1,33 @@
+---
+title: "Workshop Overview"
+format: html
+author: 
+  - name: "Devon J. Boland"
+    orcid: "0000-0001-8903-9718"
+    url: "https://devonjboland.github.io/"
+    affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
+    email: "devonjboland@tamu.edu"
+    corresponding: true
+date: last-modified
+---
+
+# Welcome {.unnumbered}
+
+Welcome to the SC3 ABRF R Workshop. This 4-hour course is designed to take you through the fundamentals of R in a core facility context.
+
+## Schedule
+* **35 minutes:** Module 1 - The Modern R Ecosystem & Project Sandbox
+* **35 minutes:** Module 2 - R Syntax & Core Data Structures
+* **50 minutes:** Module 3 - Core Admin - Wrangling & Visualizing iLab Revenue
+* **45 minutes:** Module 4 - Core Operations - Instrument QA/QC & Analytics
+
+## Prerequisites
+Please ensure you have the following installed before we begin:
+1. R (version 4.2.0 or higher)
+2. Positron
+3. The `tidyverse` package
+
+You can install the required packages by running the following in your R console:
+```r
+install.packages("tidyverse")
+```

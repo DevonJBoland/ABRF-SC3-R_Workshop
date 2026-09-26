@@ -1,0 +1,19 @@
+project:
+  type: book
+  output-dir: _book
+  resources:
+    - "*.qmd"      # Bundles all individual notebooks
+    - "data/*"     # Include any raw data folders
+
+book:
+  title: "SC3 ABRF R Workshop"
+  author: "Devon J. Boland"
+  chapters:
+    - index.qmd
+    - R-Introductions.qmd
+    - R-coding.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true

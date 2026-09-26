@@ -1,0 +1,28 @@
+---
+title: "Module 2: R Syntax & Core Data Structures"
+format: html
+author: 
+  - name: "Devon J. Boland"
+    orcid: "0000-0001-8903-9718"
+    url: "https://devonjboland.github.io/"
+    affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
+    email: "devonjboland@tamu.edu"
+    corresponding: true
+date: last-modified
+---
+[Download this Notebook (R-Introductions.qmd)](R-coding.qmd){.btn .btn-primary}
+
+## R Basics
+Congratualtions, you have made it through the through the fundamentals of setting up your own personal R environemnt, and we have hardly done any coding. If you have managed to not fall asleep so far, get ready for the excitement of writting code! **Join the dark side of the lab, and feel it's power** (*read in a legally distinct and not trademarkable character's voice*)!
+
+### Hello, world!
+In all seriousness though, coding can be as simple or complex as you make it. For instance, we are going to begin by writing the first program every new coder learns in any programming langueage the `Hello, world!` statement. We will use the `print()` function from base R. We will go over each part of it shortly. Begin, typing the following in your R script:
+```r
+print("Hello, world!")
+```
+As you can see the statement "Hello, world!" was output (or printed, hence the function name) below in our R console. We called the `print()` function which takes as input a string (text) or number as input. This `print()` function is used a lot across many programming langueages. You have commonly encountered it using many programs in your day-to-day jobs. When coding it is often used to print a status update, error message, warning, etc. to the user as feedback so we aren't just starting at a static screen wondering if something has happened or we have messed up.
+
+Now we are going to add a layer to our `print()` code from earlier. What if we wanted to store a message to ourselves, say remember to drink our coffee while it is still hot, and view it later. We achieve this by creating a `vairable` and casting (storing) a value in it using the `<-` operator.
+```r
+
+```

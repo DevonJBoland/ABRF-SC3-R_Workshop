@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "SC3 ABRF R Workshop",
+    "section": "",
+    "text": "Welcome\nWelcome to the SC3 ABRF R Workshop. This 4-hour course is designed to take you through the fundamentals of R in a core facility context.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Workshop Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#schedule",
+    "href": "index.html#schedule",
+    "title": "SC3 ABRF R Workshop",
+    "section": "0.1 Schedule",
+    "text": "0.1 Schedule\n\n35 minutes: Module 1 - The Modern R Ecosystem & Project Sandbox\n35 minutes: Module 2 - R Syntax & Core Data Structures\n50 minutes: Module 3 - Core Admin - Wrangling & Visualizing iLab Revenue\n45 minutes: Module 4 - Core Operations - Instrument QA/QC & Analytics",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Workshop Overview</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "SC3 ABRF R Workshop",
+    "section": "0.2 Prerequisites",
+    "text": "0.2 Prerequisites\nPlease ensure you have the following installed before we begin: 1. R (version 4.2.0 or higher) 2. Positron 3. The tidyverse package\nYou can install the required packages by running the following in your R console:\ninstall.packages(\"tidyverse\")",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Workshop Overview</span>"
+    ]
+  },
+  {
+    "objectID": "R-Introductions.html",
+    "href": "R-Introductions.html",
+    "title": "2  Module 1: The Modern R Ecosystem & Project Sandbox",
+    "section": "",
+    "text": "2.1 Introduction to R\nDownload this Notebook (R-Introductions.qmd)\nThe R programming language is an incredible, open-source data analysis language used by many researchers globally to quickly to compute, analyze, and visualize their data. The beauty of R is the massive community-driven repositories of programs that enable everyone, even users new to R, the ability to immediately begin performing simple to complex analyses. From simple plotting of facility revenue to complex machine-learning analysis of single-cell RNA-sequencing. This workshop is broken down into 4 modules covering how to set-up R, learn R basic syntax (i.e. how R code is written), how to plot core facility revenue with data exported from iLab, and finally how to perform QA/QC analyses of instrument metadata to identify bottlenecks in the lab. Module 1 will focus on a gentle introdution to R and how to setup our IDE.\nGoals for this module:",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Module 1: The Modern R Ecosystem & Project Sandbox</span>"
+    ]
+  },
+  {
+    "objectID": "R-Introductions.html#introduction-to-r",
+    "href": "R-Introductions.html#introduction-to-r",
+    "title": "2  Module 1: The Modern R Ecosystem & Project Sandbox",
+    "section": "",
+    "text": "Understand the difference between base and virtual R ennvironments\nLearn how to install R packages\nComprehend where to find R packages CRAN, Bioconductor, etc.\n\n\n2.1.1 Positron IDE & R Basics\nBefore we can get into processing data, we first need to learn the basics of our compute environment. For this workshop this will be you laptop, later though this could be a remote desktop, server, or even the cloud depending on your institutional rescources.\nTo begin, we will need to install R and an IDE. IDE stands for Interactive Development Environment, and is our homebase for interacting and using the R programing language. For this workshop we will be using the Positron IDE, an IDE made by the company Posit. It replaced RStudio the original IDE for R. It comes with some additional bells and whistles we won’t be getting into in this workshop, but are highly useful if you continue your journey in using R. It’s forked from Microsoft’s Visual Studio Code, and if you have used VS Code before you will notice the striking similarities.\nPosit has released an entire series on how to use and get familiar with Positron IDE which you can find on their website here. You can use these to refresh yourself after this workshop. For now though, follow along on the presentation screen.\n\n\n2.1.2 Reproducibility Crisis & How to Fix It (Virtual Environments)\nHow many times have you heard, “Look at my lab notebook for the protocol and it will work.”, to only find out that, no, it in fact does not work. Either due to a missing step, wrong concentrations, incorrect buffer, etc. In informatics, we face a similar reproducibility crisis, but instead of a difference in buffer components, its program versions. Pacakages in R are often created by scientists and researchers to address a very specific issue. After publication, if the program is used by many others, it often receives routine updates. Depending on its popularity, these updates could be weekly to annually. Some updates just fix bugs or errors with the code, while others may change how the program itself works and how we use it. To avoid version issues when sharing code or having someone else run code that we wrote, we use a version managing tool to lock versions of softwares we are using. This especially helps to prevent those pesky IT/TS departments forced updates on our computers that would otherwise break everything.\nIn R, this tool is called renv, which stands for R environment. This is a virtual ennvirment management tool that will help us as we will see later. When you installed R on your computer, it created a base R environment where all the files and code to use R are located. This base environment is accessible to everything and everyone on your computer. In contrast virtual enrivonments are locations on your computer only accessible who and what you allow. This is typically a location or folder you chose each time your create one. For this workshop we will begin by creating a virtual ennvironment in the folder we are currently in. We can do this by using the renv package below:\n# First we need to install renv using the install.packages() function\ninstall.packages(\"renv\")\n\n# Next we activate our virtual enrivonment with the activate() function\nrenv::activate()\nNext, we will install one of the most invaluable packages within the R ecosystem tidyverse. tidyverse is a compilation of various data handling, transformation, processing, and visualization R packages wrapped into a single package. This makes for easier install and loading, and it will handle the majority of what we are going to cover in this workshop. To install tidyverse copy and paste the code below in your R console:\n# install the tidyverse package from CRAN\ninstall.packages(\"tidyverse\")\nNow, we are ready to begin to write our first R program!",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Module 1: The Modern R Ecosystem & Project Sandbox</span>"
+    ]
+  },
+  {
+    "objectID": "R-coding.html",
+    "href": "R-coding.html",
+    "title": "3  Module 2: R Syntax & Core Data Structures",
+    "section": "",
+    "text": "3.1 R Basics\nDownload this Notebook (R-Introductions.qmd)\nCongratualtions, you have made it through the through the fundamentals of setting up your own personal R environemnt, and we have hardly done any coding. If you have managed to not fall asleep so far, get ready for the excitement of writting code! Join the dark side of the lab, and feel it’s power (read in a legally distinct and not trademarkable character’s voice)!",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Module 2: R Syntax & Core Data Structures</span>"
+    ]
+  },
+  {
+    "objectID": "R-coding.html#r-basics",
+    "href": "R-coding.html#r-basics",
+    "title": "3  Module 2: R Syntax & Core Data Structures",
+    "section": "",
+    "text": "3.1.1 Hello, world!\nIn all seriousness though, coding can be as simple or complex as you make it. For instance, we are going to begin by writing the first program every new coder learns in any programming langueage the Hello, world! statement. We will use the print() function from base R. We will go over each part of it shortly. Begin, typing the following in your R script:\nprint(\"Hello, world!\")\nAs you can see the statement “Hello, world!” was output (or printed, hence the function name) below in our R console. We called the print() function which takes as input a string (text) or number as input. This print() function is used a lot across many programming langueages. You have commonly encountered it using many programs in your day-to-day jobs. When coding it is often used to print a status update, error message, warning, etc. to the user as feedback so we aren’t just starting at a static screen wondering if something has happened or we have messed up.\nNow we are going to add a layer to our print() code from earlier. What if we wanted to store a message to ourselves, say remember to drink our coffee while it is still hot, and view it later. We achieve this by creating a vairable and casting (storing) a value in it using the &lt;- operator.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Module 2: R Syntax & Core Data Structures</span>"
+    ]
+  }
+]
