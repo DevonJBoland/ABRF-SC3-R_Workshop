@@ -1,5 +1,6 @@
-/renv/
+renv/
 .Rprofile
 
 /.quarto/
 **/*.quarto_ipynb
+_book/
