@@ -9,20 +9,73 @@ author:
     email: "devonjboland@tamu.edu"
     corresponding: true
 date: last-modified
+code-annotations: below
 ---
 [Download this Notebook (R-Introductions.qmd)](R-coding.qmd){.btn .btn-primary}
 
 ## R Basics
-Congratualtions, you have made it through the through the fundamentals of setting up your own personal R environemnt, and we have hardly done any coding. If you have managed to not fall asleep so far, get ready for the excitement of writting code! **Join the dark side of the lab, and feel it's power** (*read in a legally distinct and not trademarkable character's voice*)!
+Congratualtions, you have made it through the through the fundamentals of setting up your own personal R environemnt, 
+and we have hardly done any coding. If you have managed to not fall asleep so far, get ready for the excitement of writting code! 
+**Join the dark side of the lab, and feel it's power** (*read in a legally distinct and not trademarkable character's voice*)!
 
 ### Hello, world!
 In all seriousness though, coding can be as simple or complex as you make it. For instance, we are going to begin by writing the first program every new coder learns in any programming langueage the `Hello, world!` statement. We will use the `print()` function from base R. We will go over each part of it shortly. Begin, typing the following in your R script:
 ```r
 print("Hello, world!")
 ```
-As you can see the statement "Hello, world!" was output (or printed, hence the function name) below in our R console. We called the `print()` function which takes as input a string (text) or number as input. This `print()` function is used a lot across many programming langueages. You have commonly encountered it using many programs in your day-to-day jobs. When coding it is often used to print a status update, error message, warning, etc. to the user as feedback so we aren't just starting at a static screen wondering if something has happened or we have messed up.
+As you can see the statement "Hello, world!" was output (or printed, hence the function name) below in our R console. 
+We called the `print()` function which takes as input a string (text) or number as input. This `print()` function is used 
+a lot across many programming langueages. You have commonly encountered it in your day-to-day jobs. When coding it is often 
+used to print a status update, error message, warning, etc. to the user as feedback so we aren't just starting at a static 
+screen wondering if something has happened or we have messed up.
 
-Now we are going to add a layer to our `print()` code from earlier. What if we wanted to store a message to ourselves, say remember to drink our coffee while it is still hot, and view it later. We achieve this by creating a `vairable` and casting (storing) a value in it using the `<-` operator.
+Now we are going to add a layer to our `print()` code from earlier. What if we wanted to store a message to ourselves, 
+say remember to drink our coffee while it is still hot, and view it later. We achieve this by creating a `vairable` and 
+casting (storing) a value in it using the `<-` operator.
 ```r
+#| eval: true
+note <- "Remember, to drink your coffee, while it is hot!"  # <1>
+print("Here we are going to print our note below:")
+print(note) # <2>
+```
+1. this line stores our message about our coffee into the vaiable "note".
+2. then we print it to stdout.
 
+Congrats! You have learned two basics in the R programming language, how to call a function `print`, 
+and how to store a variable with the `<-` operator. Now we are going to move on to store data in R.
+
+### Vector, the simplest way to store multiple data
+Above we stored our first data, a single string into the variable `note`. But what if we wanted to store a a list of numbers?
+In R, a series of data is called a **vector** (in R we also have list objects, which behave differently but can look similar). 
+We begin a vector using the `c()` and separating elements in the vector with a **comma**. Below, let's create a vector of numbers 1-5.
+```r
+num_vec <- c(1,2,3,4,5)
+print(num_vec)
+```
+As you can see, we stored a list of the numbers 1-5 in the variable called `num_vec`. Unlike before, our variable now stored as numbers,
+specifically as integers. You'll notice how we dropped the `""` marks as we intended to store numbers instead of strings.
+
+However we can mix data types in vectors, lets see what happends when we try to mix numbers and strings:
+```r
+mix_vec <- c(1, "the", 2, "cow", 3, "moos")
+print(mix_vec)
+```
+### DataFrames: R's Excel Table Data Object
+Vetors are very useful and a core object type in R. Many other useful objects are built on top of vectors. However, the most common type
+of data we deal with in R will be DataFrames/Tibbles. DataFrames (or the modern equivalent Tibbles, used in tidyverse) are the R equivalent of tables in Excel.
+
+Copy and run the following code to generate a dataframe:
+```r
+df <- data.frame(name=c("A", "B"), value = c(5, 10)) # <1>
+print(df)
+
+tib <- tibble(name=c("C", "D"), value = c(15, 20)) # <2>
+print(tib)
+```
+1. Here we use the base R function data.frame() function to create a dataframe object
+2. Here we use the tidyverse tibble() function to create a tibble object.
+
+Now we have two separate frames of data. Next we will show you how we can combine them. This is useful if we have multiple datasets we have loaded individually and now need to combine. Here we will use the `dplyr` function `bind_rows()`.
+```r
+combined_df <- bind_rows(df, tib)
 ```
