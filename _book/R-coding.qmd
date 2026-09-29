@@ -100,5 +100,15 @@ print(colnames(combined_df)) # <2>
 
 Above we can see that, the row indexes are numbers, and our column names are "name" and "value". Next lets see how we print specific rows:
 ```{r}
-
+print(combined_df[1,])
+print(combined_df[3,])
 ```
+
+Here the numbers represent coordinates within the dataframe. By leaving the second value empty (after the comma) we print a single row. The same would be true if we switched the numbers around, and we would print a column instead. To access specific data, we use both coordinate values:
+```{r}
+print(combined_df[1,2])
+```
+
+#### Importing Tabular/CSV Data
+
+Now that 
