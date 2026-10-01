@@ -1,0 +1,51 @@
+---
+title: "The Modern R Ecosystem & Project Sandbox"
+format: html
+author: 
+  - name: "Devon J. Boland"
+    orcid: "0000-0001-8903-9718"
+    url: "https://devonjboland.github.io/"
+    affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
+    email: "devonjboland@tamu.edu"
+    corresponding: true
+date: last-modified
+---
+[Download this Notebook (R-Introductions.qmd)](R-Introductions.qmd){.btn .btn-primary}
+
+## Introduction to R
+The [R](https://www.r-project.org/) programming language is an incredible, open-source data analysis language used by many researchers globally to quickly to compute, analyze, and visualize their data. The beauty of R is the massive community-driven repositories of programs that enable everyone, even users new to R, the ability to immediately begin performing simple to complex analyses. From simple plotting of facility revenue to complex machine-learning analysis of single-cell RNA-sequencing. This workshop is broken down into 4 modules covering how to set-up R, learn R basic syntax (i.e. how R code is written), how to plot core facility revenue with data exported from iLab, and finally how to perform QA/QC analyses of instrument metadata to identify bottlenecks in the lab. Module 1 will focus on a gentle introdution to R and how to setup our IDE.
+
+*Goals for this module:*
+
+- Understand the difference between base and virtual R ennvironments
+- Learn how to install R packages
+- Comprehend where to find R packages [CRAN](https://cloud.r-project.org/), [Bioconductor](https://www.bioconductor.org/), etc.
+
+
+
+### Positron IDE & R Basics
+Before we can get into processing data, we first need to learn the basics of our compute environment. For this workshop this will be you laptop, later though this could be a remote desktop, server, or even the cloud depending on your institutional rescources.
+
+
+To begin, we will need to install [R](https://www.r-project.org/) and an IDE. **IDE** stands for **[I]{.underline}**nteractive **[D]{.underline}**evelopment **[E]{.underline}**nvironment, and is our homebase for interacting and using the R programing language. For this workshop we will be using the [Positron IDE](https://positron.posit.co/), an IDE made by the company Posit. It replaced RStudio the original IDE for R. It comes with some additional bells and whistles we won't be getting into in this workshop, but are highly useful if you continue your journey in using R. It's forked from Microsoft's Visual Studio Code, and if you have used VS Code before you will notice the striking similarities.
+
+Posit has released an entire series on how to use and get familiar with Positron IDE which you can find on their website [here](https://academy.posit.co/page/all-courses#ways-to-learn_course). You can use these to refresh yourself after this workshop. For now though, follow along on the presentation screen.
+
+### Reproducibility Crisis & How to Fix It (Virtual Environments)
+How many times have you heard, *"Look at my lab notebook for the protocol and it will work."*, to only find out that, no, it in fact **does not** work. Either due to a missing step, wrong concentrations, incorrect buffer, etc. In informatics, we face a similar reproducibility crisis, but instead of a difference in buffer components, its program versions. Pacakages in R are often created by scientists and researchers to address a very specific issue. After publication, if the program is used by many others, it often receives routine updates. Depending on its popularity, these updates could be weekly to annually. Some updates just fix bugs or errors with the code, while others may change how the program itself works and how we use it. To avoid version issues when sharing code or having someone else run code that we wrote, we use a version managing tool to **lock** versions of softwares we are using. This especially helps to prevent those pesky IT/TS departments forced updates on our computers that would otherwise break everything. 
+
+In R, this tool is called `renv`, which stands for R environment. This is a virtual ennvirment management tool that will help us as we will see later. When you installed R on your computer, it created a **base** R environment where all the files and code to use R are located. This base environment is accessible to everything and everyone on your computer. In contrast virtual enrivonments are locations on your computer only accessible who and what you allow. This is typically a location or folder you chose each time your create one. For this workshop we will begin by creating a virtual ennvironment in the folder we are currently in. We can do this by using the `renv` package below:
+```r
+# First we need to install renv using the install.packages() function
+install.packages("renv")
+
+# Next we activate our virtual enrivonment with the activate() function
+renv::activate()
+```
+Next, we will install one of the most valuable packages within the R ecosystem `tidyverse`. [tidyverse](https://tidyverse.org/) is a compilation of various data handling, transformation, processing, and visualization R packages wrapped into a single package. This makes for easier install and loading, and it will handle the majority of what we are going to cover in this workshop. To install `tidyverse` copy and paste the code below in your R console:
+```r
+# install the tidyverse package from CRAN
+install.packages("tidyverse")
+```
+Now, we are ready to begin to write our first R program!
+

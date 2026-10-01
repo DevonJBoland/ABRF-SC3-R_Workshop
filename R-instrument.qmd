@@ -1,0 +1,167 @@
+---
+title: "Core Operations - Instrument QA/QC & Analytics"
+format: html
+author: 
+  - name: "Devon J. Boland"
+    orcid: "0000-0001-8903-9718"
+    url: "https://devonjboland.github.io/"
+    affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
+    email: "devonjboland@tamu.edu"
+    corresponding: true
+date: last-modified
+code-annotations: below
+---
+[Download this Notebook (R-instrument.qmd)](R-instrument.qmd){.btn .btn-primary}
+
+## Session Overview
+- 2:10 - 2:30 | QC Data Wrangling & Cleaning
+- 2:30 - 2:55 | Statistical Analysis & Diagnostic Visualizations
+
+## Setup & Required Packages
+Before starting, we need to load packages for data processing, loading, and plotting.
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+```
+
+## QC Data Wrangling & Clenaing
+Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let's go over how to load an Excel file. Earlier we loaded the `readxl` package which allows us to do so. For this portion we have simulated data we will use, but this can be exapnded to any operational instrument information. You can download a copy of the data [here](INSERT_LINK_HERE).
+```{r}
+ms_raw <- read_csv("data/mass_spec_qc_logs.csv", show_col_types = FALSE)
+ngs_raw <- read_excel("data/genomics_core_ops.xlsx")
+
+glimpse(ms_raw) # <1>
+glimpse(ngs_raw)
+
+```
+1. Here we use the `glimpse()` function from `dplyr` which gives us a compact and succinct view of our dataframes.
+
+### Handling Missing Values (`NA`s) from Failed Runs
+Instrument aborts or sensor read errors produce missing values, putting a zero or empty cell when written to a file. When we load these in to dataframes, R automatically will replace cells with missing values to `NA`. If we try to perform any transformation or plotting, `NA`s can often produce errors and complications downstream. In this case we are going to remove failed runs from the dataset, in some cases you may be interested in logging them for metric analysis.
+```{r}
+ms_raw |> 
+  filter(is.na(Mass_Accuracy_PPM))
+
+ms_clean <- ms_raw |> 
+  filter(!is.na(Mass_Accuracy_PPM))
+
+print(paste0("Raw run logs: ", nrow(ms_raw), " | Clean run logs: ", nrow(ms_clean))) # <1>
+```
+1. `nrow()` takes a vector or dataframe as input, and returns a numerical for the number of rows it contains.
+
+## Determining If There is a Distance in Labor Time For Lab Protocols
+Let's say we were interested in determining if there is a difference in labor time between two library preparation protocols, Ribodepletion and Standard PolyA, in our NGS core ahead of our upcoming rate study. Here we will perform a Welch two sample t-test to determine this and will use the `t.test()` function. 
+
+### Welch's t-Test
+We are using the *formula* interface of the function, where we provide the numerical values first then the categorical values to the left, separated by a tilde `~`. We then provide the data we loaded earlier.
+```{r}
+t_test_res <- t.test(Days_to_Deliver ~ Prep_Kit, data = ngs_raw)
+t_test_res
+```
+
+### Visualization with `ggplot2` BoxPlot
+We can then visualize this as a boxplot using `ggplot2`.
+```{r}
+ngs_time_p <- ggplot(ngs_raw, aes(x = Prep_Kit, y = Days_to_Deliver, fill = Prep_Kit)) +
+  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
+  geom_jitter(width = 0.15, alpha = 0.8, color = "#333333") +
+  scale_fill_manual(values = c("Standard PolyA" = "#2b5c8f", "Ribodepletion" = "#d95f02")) +
+  labs(
+    title = "NGS Turnaround Time by Sample Preparation Kit",
+    subtitle = paste("t-test p-value:", format.pval(t_test_res$p.value, digits = 3)),
+    x = "Library Preparation Protocol",
+    y = "Days to Delivery",
+    fill = "Prep Kit"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold")
+  )
+  ngs_time_p
+
+ggsave(
+  filename = "output_plots/ngs_library_prep_analysis.pdf",
+  plot = ngs_time_p,
+  width = 6,
+  height = 5,
+  units = "in",
+  dpi = 300
+)
+```
+
+## Tracking Instrument Drift (Linear Regression)
+What if we suspect there is a problem with our mass spec calibration drifting, or a laser intensity decay issue and the onboard diagnostics are not reporting an issue. We can manually investigate this without wasting reagents, or instrument run time using linear regression.
+
+### Fit linear model per instrument
+We will use the `lm()` function the base R package `stats`. It fits a linear model to a specified dataset, and then can be used for myriad of tasks such as regression, analysis of variance, and even analysis of covariance.
+
+Then, we'll extract the model coefficients with the `coef()` function. Look closely in the code block below. Do you recongize certain dataframe manipulation techniques we used earlier in the workshop. If you are having a hard time visualizing what values we are pulling you can always inspect the output try it for yourself?
+
+```{r}
+drift_models <- ms_clean |> 
+  group_by(Instrument_ID) |> 
+  summarise(
+    intercept = coef(lm(Mass_Accuracy_PPM ~ Run_Date))[1],
+    slope_per_day = coef(lm(Mass_Accuracy_PPM ~ Run_Date))[2],
+    p_value = summary(lm(Mass_Accuracy_PPM ~ Run_Date))$coefficients[2, 4]
+  )
+
+drift_models
+```
+
+### Visualizaing Linear Model with `ggplot2` Line Graphs
+Now that our data is clean, we will aggregate revenue trends and build report-ready figures.
+```{r}
+ggplot(ms_clean, aes(x = Run_Date, y = Mass_Accuracy_PPM, color = Instrument_ID)) +
+  geom_point(size = 2.5) +
+  geom_smooth(method = "lm", se = TRUE, linestyle = "dashed") +
+  geom_hline(yintercept = 1.8, linetype = "dotted", color = "red", linewidth = 1) +
+  annotate("text", x = min(ms_clean$Run_Date), y = 1.85, label = "Vendor Spec Upper Limit (1.8 PPM)", color = "red", hjust = 0) +
+  scale_color_manual(values = c("Mass_Spec_A" = "#e41a1c", "Mass_Spec_B" = "#377eb8")) +
+  labs(
+    title = "Instrument Calibration Drift Tracking",
+    subtitle = "Mass_Spec_A demonstrates significant positive baseline drift over time",
+    x = "Run Date",
+    y = "Mass Accuracy Error (PPM)",
+    color = "Instrument ID"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+## Analysing Variance of $Q30$ Scores from Different Sequencers
+Finally, we are interested in visualizing the differences in project >$Q30$ base scoring across two of our sequencers. To acheive this we will plot the 
+```{r}
+ggplot(ngs_raw, aes(x = Quality_Score_Q30, fill = Platform)) +
+  geom_histogram(binwidth = 1, alpha = 0.7, position = "identity", color = "white") +
+  facet_wrap(~Platform, ncol = 1) +
+  scale_fill_manual(values = c("NovaSeq" = "#1b9e77", "MiSeq" = "#7570b3")) +
+  labs(
+    title = "Distribution of Q30 Quality Scores by Platform",
+    x = "% Bases >= Q30",
+    y = "Project Count"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "none"
+  )
+```
+
+## Summary Checklist
+* [x] Data Import: Loaded **.csv** and **.xlsx** files using `read_csv()` and `readxl::read_excel()`.
+
+* [x] Data Hygiene: Filtered and audited missing values (**NA**) stemming from failed runs.
+
+* [x] Hypothesis Testing: Conducted independent Welch t-tests on core turnaround times.
+
+* [x] Drift Tracking: Fitted linear models and plotted longitudinal trendlines with vendor threshold limits.
+
+* [x] Quarterly Analysis: Segmented revenue by institution type using stacked bar and line charts.
+
+* [x] Distribution Metrics: Evaluated quality score metrics ($Q30$) using faceted histograms and boxplots.
