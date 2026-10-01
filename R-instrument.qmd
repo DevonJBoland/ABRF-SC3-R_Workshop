@@ -134,134 +134,34 @@ ggplot(ms_clean, aes(x = Run_Date, y = Mass_Accuracy_PPM, color = Instrument_ID)
   )
 ```
 
-### Monthly Revenue (Bar Chart)
-To identify seasonal dips, we aggregate total revenue by month.
+## Analysing Variance of $Q30$ Scores from Different Sequencers
+Finally, we are interested in visualizing the differences in project >$Q30$ base scoring across two of our sequencers. To acheive this we will plot the 
 ```{r}
-monthly_revenue <- cleaned_revenue_data |> 
-  group_by(month_label) |> 
-  summarise(total_revenue = sum(Total.Price), .groups = "drop")
-head(monthly_revenue)
-```
-```{r}
-p1 <- ggplot(monthly_revenue, aes(x = month_label, y = total_revenue)) +
-  geom_col(fill = "orange", color = "white", alpha = 0.9) +
-  scale_y_continuous(labels = scales::dollar_format(prefix = "$")) +
+ggplot(ngs_raw, aes(x = Quality_Score_Q30, fill = Platform)) +
+  geom_histogram(binwidth = 1, alpha = 0.7, position = "identity", color = "white") +
+  facet_wrap(~Platform, ncol = 1) +
+  scale_fill_manual(values = c("NovaSeq" = "#1b9e77", "MiSeq" = "#7570b3")) +
   labs(
-    title="Total Monthly Revenue (FY26)",
-    subtitle="Analysis of seasonal dips in core facility billing",
-    x="Month",
-    y="Revenue (USD)"
-  ) +
-    theme_minimal(base_size = 12) +
-  theme(
-    plot.title=element_text(face = "bold", size = 14),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_blank()
-  )
-
-  p1
-```
-
-## Analysing Variance of *Q*30 Scores from Different Sequencers
-Finally, we are interested in determining if there is significant variance across base quality encoded scores between runs across teh instruments. 
-```{r}
-quarterly_institution_revenue <- cleaned_revenue_data |> 
-  mutate(Institution.Type = if_else(
-    Customer.Institute == "Texas A&M University",
-    "Internal",
-    "External"
-  )) |> 
-    group_by(quarter, Institution.Type) |> 
-    summarise(total_revenue = sum(Total.Price), .groups = "drop")
-  
-head(quarterly_institution_revenue)
-```
-```{r}
-p2 <- ggplot(quarterly_institution_revenue, aes(x = quarter, y = total_revenue, fill = Institution.Type)) +
-  geom_col(position = "stack", width = 0.6) +
-  scale_fill_manual(values = c("Internal" = "blue", "External" = "orange")) +
-  scale_y_continuous(labels = scales::dollar_format(prefix = "$")) +
-  labs(
-    title = "Quarterly Revenue Breakdown by Institution Type",
-    subtitle = "Stacked var view of internal vs. external revenue",
-    x = "Quarter",
-    y = "Revenue (USD)",
-    fill = "Institution Type"
-  ) +
-    theme_minimal(base_size = 12) +
-    theme(
-      plot.title = element_text(face="bold", size = 14),
-      legend.position = "bottom"
-    )
-p2
-```
-
-### Line Chart Option
-```{r}
-p3 <- ggplot(quarterly_institution_revenue, aes(x = quarter, y = total_revenue, color = Institution.Type, group = Institution.Type)) +
-  geom_line(linewidth = 1.2) +
-  geom_point(size = 3) +
-  scale_color_manual(values = c("Internal" = "#2b5c8f", "External" = "#d95f02")) +
-  scale_y_continuous(labels = scales::dollar_format(prefix = "$")) +
-  labs(
-    title = "Quarterly Revenue Trajectory",
-    subtitle = "Comparison of growth trends between Internal and External/Affiliate clients",
-    x = "Quarter",
-    y = "Revenue (USD)",
-    color = "Institution Type"
+    title = "Distribution of Q30 Quality Scores by Platform",
+    x = "% Bases >= Q30",
+    y = "Project Count"
   ) +
   theme_minimal(base_size = 12) +
   theme(
-    plot.title = element_text(face = "bold", size = 14),
-    legend.position = "bottom"
+    plot.title = element_text(face = "bold"),
+    legend.position = "none"
   )
-
-p3
-```
-
-### Exporint Report-Ready Plots
-To export high-resolution figures for reports or internal sharing, we use `ggsave()`.
-```{r}
-dir.create("output_plots", showWarnings = FALSE)
-
-ggsave(
-  filename = "output_plots/monthly_revenue_trend.pdf",
-  plot = p1,
-  width = 8,
-  height = 5,
-  units = "in",
-  dpi = 300
-)
-
-ggsave(
-  filename = "output_plots/quarterly_revenue_institution_stacked.png",
-  plot = p2,
-  width = 8,
-  height = 5,
-  units = "in",
-  dpi = 300
-)
-
-ggsave(
-  filename = "output_plots/quarterly_revenue_institution_line.jpeg",
-  plot = p3,
-  width = 8,
-  height = 5,
-  units = "in",
-  dpi = 300
-)
-
 ```
 
 ## Summary Checklist
-* [x] Data Wrangling: Filtered out test accounts & unpaid transactions using dplyr::filter().
+* [x] Data Import: Loaded **.csv** and **.xlsx** files using `read_csv()` and `readxl::read_excel()`.
 
-* [x] Piping: Chained operators cleanly using the native R pipe (|>).
+* [x] Data Hygiene: Filtered and audited missing values (**NA**) stemming from failed runs.
 
-* [x] Date Parsing: Extracted month and quarter attributes using lubridate.
+* [x] Hypothesis Testing: Conducted independent Welch t-tests on core turnaround times.
 
-* [x] Monthly Trends: Visualized monthly dips via bar charts.
+* [x] Drift Tracking: Fitted linear models and plotted longitudinal trendlines with vendor threshold limits.
 
 * [x] Quarterly Analysis: Segmented revenue by institution type using stacked bar and line charts.
 
-* [x] Export: Configured publication-quality exports using ggsave().
+* [x] Distribution Metrics: Evaluated quality score metrics ($Q30$) using faceted histograms and boxplots.
