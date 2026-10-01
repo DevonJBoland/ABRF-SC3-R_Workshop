@@ -50,42 +50,89 @@ print(paste0("Raw run logs: ", nrow(ms_raw), " | Clean run logs: ", nrow(ms_clea
 ```
 1. `nrow()` takes a vector or dataframe as input, and returns a numerical for the number of rows it contains.
 
-### Load in iLab Data
-Now let's load in our data as have done previously:
+## Determining If There is a Distance in Labor Time For Lab Protocols
+Let's say we were interested in determining if there is a difference in labor time between two library preparation protocols, Ribodepletion and Standard PolyA, in our NGS core ahead of our upcoming rate study. Here we will perform a Welch two sample t-test to determine this and will use the `t.test()` function. 
+
+### Welch's t-Test
+We are using the *formula* interface of the function, where we provide the numerical values first then the categorical values to the left, separated by a tilde `~`. We then provide the data we loaded earlier.
 ```{r}
-ilab_raw <- read.csv("data/module3_FY26_full.csv", header = TRUE)
+t_test_res <- t.test(Days_to_Deliver ~ Prep_Kit, data = ngs_raw)
+t_test_res
 ```
 
-## Basic Statistical Analysis & Visualizations
-
-
-### Clean iLab Data
-We have our iLab data loaded into memory and stored in the vairable `ilab_raw`. However, if we inspect the data we will notice it is full of `n/a`, or just empty data points throughout the columns of the dataframe. We need to clean up the data and get it in a state that is useful for reporting an more informative for plotting.
-
-We are going to accomplish this using the `dplyr` package bundled with `tidyverse`. Our goals are to:
-* Filter out internal test accounts `(Customer Name != "Test Account")`, and unpaid/cancelled invoices `(payment_status == "Paid")`.
-* Parse timestamps into `Month` and `Quarter` using `lubridate` functions.
-* Format date categories cleanly for downstream visualization.
-
+### Visualization with `ggplot2` BoxPlot
+We can then visualize this as a boxplot using `ggplot2`.
 ```{r}
-cleaned_revenue_data <- ilab_raw |>
-  filter(
-    Customer.Name != "Test Account",
-    Billing.Status == "billing_initialized"
-  ) |>
-  mutate(
-    date = mdy_hm(Billing.Date),
-    month_num = month(date),
-    month_label = month(date, label = TRUE, abbr = TRUE),
-    quarter = factor(paste0("Q", quarter(date)))
-  ) |>
-  arrange(date)
+ngs_time_p <- ggplot(ngs_raw, aes(x = Prep_Kit, y = Days_to_Deliver, fill = Prep_Kit)) +
+  geom_boxplot(alpha = 0.6, outlier.shape = NA) +
+  geom_jitter(width = 0.15, alpha = 0.8, color = "#333333") +
+  scale_fill_manual(values = c("Standard PolyA" = "#2b5c8f", "Ribodepletion" = "#d95f02")) +
+  labs(
+    title = "NGS Turnaround Time by Sample Preparation Kit",
+    subtitle = paste("t-test p-value:", format.pval(t_test_res$p.value, digits = 3)),
+    x = "Library Preparation Protocol",
+    y = "Days to Delivery",
+    fill = "Prep Kit"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(face = "bold")
+  )
+  ngs_time_p
 
-head(cleaned_revenue_data)
+ggsave(
+  filename = "output_plots/ngs_library_prep_analysis.pdf",
+  plot = ngs_time_p,
+  width = 6,
+  height = 5,
+  units = "in",
+  dpi = 300
+)
 ```
 
-## Visualizing Revenue Trends with `ggplot2`
+## Tracking Instrument Drift (Linear Regression)
+What if we suspect there is a problem with our mass spec calibration drifting, or a laser intensity decay issue and the onboard diagnostics are not reporting an issue. We can manually investigate this without wasting reagents, or instrument run time using linear regression.
+
+### Fit linear model per instrument
+We will use the `lm()` function the base R package `stats`. It fits a linear model to a specified dataset, and then can be used for myriad of tasks such as regression, analysis of variance, and even analysis of covariance.
+
+Then, we'll extract the model coefficients with the `coef()` function. Look closely in the code block below. Do you recongize certain dataframe manipulation techniques we used earlier in the workshop. If you are having a hard time visualizing what values we are pulling you can always inspect the output try it for yourself?
+
+```{r}
+drift_models <- ms_clean |> 
+  group_by(Instrument_ID) |> 
+  summarise(
+    intercept = coef(lm(Mass_Accuracy_PPM ~ Run_Date))[1],
+    slope_per_day = coef(lm(Mass_Accuracy_PPM ~ Run_Date))[2],
+    p_value = summary(lm(Mass_Accuracy_PPM ~ Run_Date))$coefficients[2, 4]
+  )
+
+drift_models
+```
+
+### Visualizaing Linear Model with `ggplot2` Line Graphs
 Now that our data is clean, we will aggregate revenue trends and build report-ready figures.
+```{r}
+ggplot(ms_clean, aes(x = Run_Date, y = Mass_Accuracy_PPM, color = Instrument_ID)) +
+  geom_point(size = 2.5) +
+  geom_smooth(method = "lm", se = TRUE, linestyle = "dashed") +
+  geom_hline(yintercept = 1.8, linetype = "dotted", color = "red", linewidth = 1) +
+  annotate("text", x = min(ms_clean$Run_Date), y = 1.85, label = "Vendor Spec Upper Limit (1.8 PPM)", color = "red", hjust = 0) +
+  scale_color_manual(values = c("Mass_Spec_A" = "#e41a1c", "Mass_Spec_B" = "#377eb8")) +
+  labs(
+    title = "Instrument Calibration Drift Tracking",
+    subtitle = "Mass_Spec_A demonstrates significant positive baseline drift over time",
+    x = "Run Date",
+    y = "Mass Accuracy Error (PPM)",
+    color = "Instrument ID"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom"
+  )
+```
 
 ### Monthly Revenue (Bar Chart)
 To identify seasonal dips, we aggregate total revenue by month.
@@ -115,8 +162,8 @@ p1 <- ggplot(monthly_revenue, aes(x = month_label, y = total_revenue)) +
   p1
 ```
 
-### Quartely Revenue By Institution Type (Stacked Bar & Line Charts)
-Next, we evaluate revenue per quarter broken down by Institution Type (Internal vs. External)
+## Analysing Variance of *Q*30 Scores from Different Sequencers
+Finally, we are interested in determining if there is significant variance across base quality encoded scores between runs across teh instruments. 
 ```{r}
 quarterly_institution_revenue <- cleaned_revenue_data |> 
   mutate(Institution.Type = if_else(
