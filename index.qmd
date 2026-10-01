@@ -15,13 +15,13 @@ date: last-modified
 
 Welcome to the SC3 ABRF R Workshop. This 4-hour course is designed to take you through the fundamentals of R in a core facility context.
 
-## Schedule
+## Schedule {.unnumbered}
 * **35 minutes:** Module 1 - The Modern R Ecosystem & Project Sandbox
 * **35 minutes:** Module 2 - R Syntax & Core Data Structures
 * **50 minutes:** Module 3 - Core Admin - Wrangling & Visualizing iLab Revenue
 * **45 minutes:** Module 4 - Core Operations - Instrument QA/QC & Analytics
 
-## Prerequisites
+## Prerequisites {.unnumbered}
 Please ensure you have the following installed before we begin:
 1. R (version 4.2.0 or higher)
 2. Positron

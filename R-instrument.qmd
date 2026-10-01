@@ -1,0 +1,220 @@
+---
+title: "Core Operations - Instrument QA/QC & Analytics"
+format: html
+author: 
+  - name: "Devon J. Boland"
+    orcid: "0000-0001-8903-9718"
+    url: "https://devonjboland.github.io/"
+    affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
+    email: "devonjboland@tamu.edu"
+    corresponding: true
+date: last-modified
+code-annotations: below
+---
+[Download this Notebook (R-instrument.qmd)](R-instrument.qmd){.btn .btn-primary}
+
+## Session Overview
+- 2:10 - 2:30 | QC Data Wrangling & Cleaning
+- 2:30 - 2:55 | Statistical Analysis & Diagnostic Visualizations
+
+## Setup & Required Packages
+Before starting, we need to load packages for data processing, loading, and plotting.
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+```
+
+## QC Data Wrangling & Clenaing
+Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let's go over how to load an Excel file. Earlier we loaded the `readxl` package which allows us to do so. For this portion we have simulated data we will use, but this can be exapnded to any operational instrument information. You can download a copy of the data [here](INSERT_LINK_HERE).
+```{r}
+ms_raw <- read_csv("data/mass_spec_qc_logs.csv", show_col_types = FALSE)
+ngs_raw <- read_excel("data/genomics_core_ops.xlsx")
+
+glimpse(ms_raw) # <1>
+glimpse(ngs_raw)
+
+```
+1. Here we use the `glimpse()` function from `dplyr` which gives us a compact and succinct view of our dataframes.
+
+### Handling Missing Values (`NA`s) from Failed Runs
+Instrument aborts or sensor read errors produce missing values, putting a zero or empty cell when written to a file. When we load these in to dataframes, R automatically will replace cells with missing values to `NA`. If we try to perform any transformation or plotting, `NA`s can often produce errors and complications downstream. In this case we are going to remove failed runs from the dataset, in some cases you may be interested in logging them for metric analysis.
+```{r}
+ms_raw |> 
+  filter(is.na(Mass_Accuracy_PPM))
+
+ms_clean <- ms_raw |> 
+  filter(!is.na(Mass_Accuracy_PPM))
+
+print(paste0("Raw run logs: ", nrow(ms_raw), " | Clean run logs: ", nrow(ms_clean))) # <1>
+```
+1. `nrow()` takes a vector or dataframe as input, and returns a numerical for the number of rows it contains.
+
+### Load in iLab Data
+Now let's load in our data as have done previously:
+```{r}
+ilab_raw <- read.csv("data/module3_FY26_full.csv", header = TRUE)
+```
+
+## Basic Statistical Analysis & Visualizations
+
+
+### Clean iLab Data
+We have our iLab data loaded into memory and stored in the vairable `ilab_raw`. However, if we inspect the data we will notice it is full of `n/a`, or just empty data points throughout the columns of the dataframe. We need to clean up the data and get it in a state that is useful for reporting an more informative for plotting.
+
+We are going to accomplish this using the `dplyr` package bundled with `tidyverse`. Our goals are to:
+* Filter out internal test accounts `(Customer Name != "Test Account")`, and unpaid/cancelled invoices `(payment_status == "Paid")`.
+* Parse timestamps into `Month` and `Quarter` using `lubridate` functions.
+* Format date categories cleanly for downstream visualization.
+
+```{r}
+cleaned_revenue_data <- ilab_raw |>
+  filter(
+    Customer.Name != "Test Account",
+    Billing.Status == "billing_initialized"
+  ) |>
+  mutate(
+    date = mdy_hm(Billing.Date),
+    month_num = month(date),
+    month_label = month(date, label = TRUE, abbr = TRUE),
+    quarter = factor(paste0("Q", quarter(date)))
+  ) |>
+  arrange(date)
+
+head(cleaned_revenue_data)
+```
+
+## Visualizing Revenue Trends with `ggplot2`
+Now that our data is clean, we will aggregate revenue trends and build report-ready figures.
+
+### Monthly Revenue (Bar Chart)
+To identify seasonal dips, we aggregate total revenue by month.
+```{r}
+monthly_revenue <- cleaned_revenue_data |> 
+  group_by(month_label) |> 
+  summarise(total_revenue = sum(Total.Price), .groups = "drop")
+head(monthly_revenue)
+```
+```{r}
+p1 <- ggplot(monthly_revenue, aes(x = month_label, y = total_revenue)) +
+  geom_col(fill = "orange", color = "white", alpha = 0.9) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "$")) +
+  labs(
+    title="Total Monthly Revenue (FY26)",
+    subtitle="Analysis of seasonal dips in core facility billing",
+    x="Month",
+    y="Revenue (USD)"
+  ) +
+    theme_minimal(base_size = 12) +
+  theme(
+    plot.title=element_text(face = "bold", size = 14),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank()
+  )
+
+  p1
+```
+
+### Quartely Revenue By Institution Type (Stacked Bar & Line Charts)
+Next, we evaluate revenue per quarter broken down by Institution Type (Internal vs. External)
+```{r}
+quarterly_institution_revenue <- cleaned_revenue_data |> 
+  mutate(Institution.Type = if_else(
+    Customer.Institute == "Texas A&M University",
+    "Internal",
+    "External"
+  )) |> 
+    group_by(quarter, Institution.Type) |> 
+    summarise(total_revenue = sum(Total.Price), .groups = "drop")
+  
+head(quarterly_institution_revenue)
+```
+```{r}
+p2 <- ggplot(quarterly_institution_revenue, aes(x = quarter, y = total_revenue, fill = Institution.Type)) +
+  geom_col(position = "stack", width = 0.6) +
+  scale_fill_manual(values = c("Internal" = "blue", "External" = "orange")) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "$")) +
+  labs(
+    title = "Quarterly Revenue Breakdown by Institution Type",
+    subtitle = "Stacked var view of internal vs. external revenue",
+    x = "Quarter",
+    y = "Revenue (USD)",
+    fill = "Institution Type"
+  ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title = element_text(face="bold", size = 14),
+      legend.position = "bottom"
+    )
+p2
+```
+
+### Line Chart Option
+```{r}
+p3 <- ggplot(quarterly_institution_revenue, aes(x = quarter, y = total_revenue, color = Institution.Type, group = Institution.Type)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c("Internal" = "#2b5c8f", "External" = "#d95f02")) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "$")) +
+  labs(
+    title = "Quarterly Revenue Trajectory",
+    subtitle = "Comparison of growth trends between Internal and External/Affiliate clients",
+    x = "Quarter",
+    y = "Revenue (USD)",
+    color = "Institution Type"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    legend.position = "bottom"
+  )
+
+p3
+```
+
+### Exporint Report-Ready Plots
+To export high-resolution figures for reports or internal sharing, we use `ggsave()`.
+```{r}
+dir.create("output_plots", showWarnings = FALSE)
+
+ggsave(
+  filename = "output_plots/monthly_revenue_trend.pdf",
+  plot = p1,
+  width = 8,
+  height = 5,
+  units = "in",
+  dpi = 300
+)
+
+ggsave(
+  filename = "output_plots/quarterly_revenue_institution_stacked.png",
+  plot = p2,
+  width = 8,
+  height = 5,
+  units = "in",
+  dpi = 300
+)
+
+ggsave(
+  filename = "output_plots/quarterly_revenue_institution_line.jpeg",
+  plot = p3,
+  width = 8,
+  height = 5,
+  units = "in",
+  dpi = 300
+)
+
+```
+
+## Summary Checklist
+* [x] Data Wrangling: Filtered out test accounts & unpaid transactions using dplyr::filter().
+
+* [x] Piping: Chained operators cleanly using the native R pipe (|>).
+
+* [x] Date Parsing: Extracted month and quarter attributes using lubridate.
+
+* [x] Monthly Trends: Visualized monthly dips via bar charts.
+
+* [x] Quarterly Analysis: Segmented revenue by institution type using stacked bar and line charts.
+
+* [x] Export: Configured publication-quality exports using ggsave().

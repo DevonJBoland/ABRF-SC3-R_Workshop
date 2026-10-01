@@ -1,5 +1,5 @@
 ---
-title: "Module 1: The Modern R Ecosystem & Project Sandbox"
+title: "The Modern R Ecosystem & Project Sandbox"
 format: html
 author: 
   - name: "Devon J. Boland"
@@ -42,7 +42,7 @@ install.packages("renv")
 # Next we activate our virtual enrivonment with the activate() function
 renv::activate()
 ```
-Next, we will install one of the most invaluable packages within the R ecosystem `tidyverse`. [tidyverse](https://tidyverse.org/) is a compilation of various data handling, transformation, processing, and visualization R packages wrapped into a single package. This makes for easier install and loading, and it will handle the majority of what we are going to cover in this workshop. To install `tidyverse` copy and paste the code below in your R console:
+Next, we will install one of the most valuable packages within the R ecosystem `tidyverse`. [tidyverse](https://tidyverse.org/) is a compilation of various data handling, transformation, processing, and visualization R packages wrapped into a single package. This makes for easier install and loading, and it will handle the majority of what we are going to cover in this workshop. To install `tidyverse` copy and paste the code below in your R console:
 ```r
 # install the tidyverse package from CRAN
 install.packages("tidyverse")

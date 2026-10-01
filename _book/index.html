@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Devon J. Boland">
-<meta name="dcterms.date" content="2026-09-28">
+<meta name="dcterms.date" content="2026-09-29">
 
 <title>SC3 ABRF R Workshop</title>
 <style>
@@ -83,7 +83,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d3f7f8e73c8d287b30bcf59c2b563615.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-bf8541b1296accc9344c8d492b94c564.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar docked quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -136,7 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">SC3 ABRF R Workshop</a> 
@@ -167,6 +167,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Module 2: R Syntax &amp; Core Data Structures</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./R-ilab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Module 3 - Core Admin - Wrangling &amp; Visualizing iLab Revenue</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -179,8 +185,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a>
   <ul class="collapse">
-  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule"><span class="header-section-number">0.1</span> Schedule</a></li>
-  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites"><span class="header-section-number">0.2</span> Prerequisites</a></li>
+  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule">Schedule</a></li>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -214,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 28, 2026</p>
+      <p class="date">September 29, 2026</p>
     </div>
   </div>
   
@@ -229,8 +235,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="welcome" class="level1 unnumbered">
 <h1 class="unnumbered">Welcome</h1>
 <p>Welcome to the SC3 ABRF R Workshop. This 4-hour course is designed to take you through the fundamentals of R in a core facility context.</p>
-<section id="schedule" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="schedule"><span class="header-section-number">0.1</span> Schedule</h2>
+<section id="schedule" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="schedule">Schedule</h2>
 <ul>
 <li><strong>35 minutes:</strong> Module 1 - The Modern R Ecosystem &amp; Project Sandbox</li>
 <li><strong>35 minutes:</strong> Module 2 - R Syntax &amp; Core Data Structures</li>
@@ -238,8 +244,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>45 minutes:</strong> Module 4 - Core Operations - Instrument QA/QC &amp; Analytics</li>
 </ul>
 </section>
-<section id="prerequisites" class="level2" data-number="0.2">
-<h2 data-number="0.2" class="anchored" data-anchor-id="prerequisites"><span class="header-section-number">0.2</span> Prerequisites</h2>
+<section id="prerequisites" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="prerequisites">Prerequisites</h2>
 <p>Please ensure you have the following installed before we begin: 1. R (version 4.2.0 or higher) 2. Positron 3. The <code>tidyverse</code> package</p>
 <p>You can install the required packages by running the following in your R console:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

@@ -4,3 +4,5 @@ renv/
 /.quarto/
 **/*.quarto_ipynb
 _book/
+
+output_plots/

@@ -8,12 +8,18 @@ project:
 book:
   title: "SC3 ABRF R Workshop"
   author: "Devon J. Boland"
+  sidebar:
+    style: "docked"
+    search: true
   chapters:
     - index.qmd
     - R-Introductions.qmd
     - R-coding.qmd
+    - R-ilab.qmd
+    - R-instrument.qmd
 
 format:
   html:
     theme: cosmo
     toc: true
+    number-sections: true

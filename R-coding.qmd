@@ -1,5 +1,5 @@
 ---
-title: "Module 2: R Syntax & Core Data Structures"
+title: "R Syntax & Core Data Structures"
 format: html
 author: 
   - name: "Devon J. Boland"
@@ -109,7 +109,7 @@ print(combined_df[1,2])
 #### Importing Tabular/CSV Data
 
 Now that we understand the structure of dataframes/tibbles in R, let's learn how to import
-our CSV/TSV/Excel-formatted data files as dataframes into R. Here we are going to leverage the the `read.csv()` from base R. Later we will work on data we pull from [iLab](https://my.ilabsolutions.com/account/login), for now please downlaod a sample data set from [here](DRIVE_LINK_INSERT). The `read.csv()` has a few parameters. We can convenitley see a quick help guide on any function of interest by using the `?` before any function call try it first below:
+our CSV/TSV/Excel-formatted data files as dataframes into R. Here we are going to leverage the the `read.csv()` from base R. Later we will work on data we pull from [iLab](https://my.ilabsolutions.com/account/login), for now please downlaod a sample data set from [here](https://github.com/DevonJBoland/ABRF-SC3-R_Workshop/blob/main/data/fy26_costs.csv). The `read.csv()` has a few parameters. We can convenitley see a quick help guide on any function of interest by using the `?` before any function call try it first below:
 ```{r}
 ?read.csv()
 csv_data <- read.csv("data/fy26_costs.csv") # <1>

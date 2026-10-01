@@ -1,5 +1,5 @@
 ---
-title: "Module 2: R Syntax & Core Data Structures"
+title: "R Syntax & Core Data Structures"
 format: html
 author: 
   - name: "Devon J. Boland"
@@ -19,15 +19,12 @@ and we have hardly done any coding. If you have managed to not fall asleep so fa
 **Join the dark side of the lab, and feel it's power** (*read in a legally distinct and not trademarkable character's voice*)!
 
 ### Hello, world!
-In all seriousness though, coding can be as simple or complex as you make it. For instance, we are going to begin by writing the first program every new coder learns in any programming langueage the `Hello, world!` statement. We will use the `print()` function from base R. We will go over each part of it shortly. Begin, typing the following in your R script:
+In all seriousness though, coding can be as simple or complex as you make it. For instance, we are going to begin by writing the first program everyone learns in any programming langueage, printing the `Hello, world!` statement. We will use the `print()` function from base R. We will go over each part of it shortly. Begin, typing the following in your R script:
 ```{r}
 print("Hello, world!")
 ```
 As you can see the statement "Hello, world!" was output (or printed, hence the function name) below in our R console. 
-We called the `print()` function which takes as input a string (text) or number as input. This `print()` function is used 
-a lot across many programming langueages. You have commonly encountered it in your day-to-day jobs. When coding it is often 
-used to print a status update, error message, warning, etc. to the user as feedback so we aren't just starting at a static 
-screen wondering if something has happened or we have messed up.
+We called the `print()` function which takes as input a string (text), number, or even a variable as input. This `print()` function is used a lot across many programming langueages. You have commonly encountered it in your day-to-day jobs. When coding it is often used to print a status update, error message, warning, etc. to the user as feedback so we aren't just starting at a static screen wondering if something has happened or we have messed up.
 
 Now we are going to add a layer to our `print()` code from earlier. What if we wanted to store a message to ourselves, 
 say remember to drink our coffee while it is still hot, and view it later. We achieve this by creating a `vairable` and 
@@ -98,17 +95,52 @@ print(colnames(combined_df)) # <2>
 1. rownames() returns a vector of the row index names, or numbers if no names are present
 2. colnames() returns a vector of the column names, or numbers if no names are present.
 
-Above we can see that, the row indexes are numbers, and our column names are "name" and "value". Next lets see how we print specific rows:
+Above we can see that, the row indexes are numbers, and our column names are "name" and "value". We can use the `rownames()` and `colnames()` functions to replace the old labels with new onces if we wanted to as well. Next lets see how we print specific rows:
 ```{r}
 print(combined_df[1,])
 print(combined_df[3,])
 ```
 
-Here the numbers represent coordinates within the dataframe. By leaving the second value empty (after the comma) we print a single row. The same would be true if we switched the numbers around, and we would print a column instead. To access specific data, we use both coordinate values:
+Here the numbers represent coordinates where the x-value corresponds to row number, and the y-value corresponds to a column number within the dataframe. By leaving the second value empty (after the comma) we print a single row. The same would be true if we switched the numbers around, and we would print a column instead. To access specific data, we use both coordinate values:
 ```{r}
 print(combined_df[1,2])
 ```
 
 #### Importing Tabular/CSV Data
 
-Now that 
+Now that we understand the structure of dataframes/tibbles in R, let's learn how to import
+our CSV/TSV/Excel-formatted data files as dataframes into R. Here we are going to leverage the the `read.csv()` from base R. Later we will work on data we pull from [iLab](https://my.ilabsolutions.com/account/login), for now please downlaod a sample data set from [here](https://github.com/DevonJBoland/ABRF-SC3-R_Workshop/blob/main/data/fy26_costs.csv). The `read.csv()` has a few parameters. We can convenitley see a quick help guide on any function of interest by using the `?` before any function call try it first below:
+```{r}
+?read.csv()
+csv_data <- read.csv("data/fy26_costs.csv") # <1>
+print(csv_data)
+
+csv_data$Costs # <2>
+```
+
+1. Here we only need to pass the path to our file, in some cases, you may need to specify which colums you would like to keep, and/or skip loading into memory.
+2. Here is another way we can print entire columns of a dataframe, by accessing the specific column name of the dataframe with `$`.
+
+Here we have an example of a simple monthly breakdown of costs and sales. What if we wanted to quickly calculate gross revenue per month? We can, quickly in fact, and it is as intuitive as using a calculator:
+```{r}
+csv_data$Revenue <- csv_data$Sales - csv_data$Costs # <1>
+print(csv_data)
+```
+
+1. Here we create a new column with `$` and name it **Revenue**. We then subtract the vector `csv_data$Costs` from `csv_data$Sales`.
+
+We have quickly calculated our total revenue for FY26. But this is something that can be readily done in excel with a similiar equation and then a click and drag down. However what if we wanted some quick statistics for each of our columns:
+```{r}
+summary(csv_data)
+```
+
+The `summary()` function take a dataframe or vector as input and quickly output basic statistical analysis of the distribution of the data. You'll notice that our Month column is a columm filled with strings. Instead we get an overview of the length, number of unique identities, number of blank entries, and the minimum and maximum number of characters in a row. All other columns contain numerical values and so we get quick distribution summaries of our data.
+
+As a final example of what we can do with R combining everything we have gone over in this notebook. Lets print a message telling us the sum total of our costs, sales, and revenue numbers for FY26:
+```{r}
+print(paste0("Total Costs: $", sum(csv_data$Costs)))
+print(paste0("Total Sales: $", sum(csv_data$Sales)))
+print(paste0("Total Revenue: $", sum(csv_data$Revenue)))
+```
+
+Now that we have gotten some exposure on loading, manipulating, and messing around with data in R. Let's move on to the a real-world example in the next section!

@@ -1,5 +1,5 @@
 ---
-title: "Module 1: The Modern R Ecosystem & Project Sandbox"
+title: "The Modern R Ecosystem & Project Sandbox"
 format: html
 author: 
   - name: "Devon J. Boland"
