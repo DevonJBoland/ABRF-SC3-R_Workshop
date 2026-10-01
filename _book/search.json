@@ -80,6 +80,16 @@
     ]
   },
   {
+    "objectID": "R-ilab.html#session-overview",
+    "href": "R-ilab.html#session-overview",
+    "title": "4  Core Admin - Wrangling & Visualizing iLab Revenue",
+    "section": "",
+    "text": "1:20 - 1:40 | Data Wrangling with dplyr\n1:40 - 2:10 | Visualizaing Revenue Trands with ggplot2 & Exploring Plots",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Core Admin - Wrangling & Visualizing iLab Revenue</span>"
+    ]
+  },
+  {
     "objectID": "R-ilab.html#setup-required-packages",
     "href": "R-ilab.html#setup-required-packages",
     "title": "4  Core Admin - Wrangling & Visualizing iLab Revenue",
@@ -115,16 +125,6 @@
     "title": "4  Core Admin - Wrangling & Visualizing iLab Revenue",
     "section": "4.5 Summary Checklist",
     "text": "4.5 Summary Checklist\n\nData Wrangling: Filtered out test accounts & unpaid transactions using dplyr::filter().\nPiping: Chained operators cleanly using the native R pipe (|&gt;).\nDate Parsing: Extracted month and quarter attributes using lubridate.\nMonthly Trends: Visualized monthly dips via bar charts.\nQuarterly Analysis: Segmented revenue by institution type using stacked bar and line charts.\nExport: Configured publication-quality exports using ggsave().",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Core Admin - Wrangling & Visualizing iLab Revenue</span>"
-    ]
-  },
-  {
-    "objectID": "R-ilab.html#session-overview",
-    "href": "R-ilab.html#session-overview",
-    "title": "4  Core Admin - Wrangling & Visualizing iLab Revenue",
-    "section": "",
-    "text": "1:20 - 1:40 | Data Wrangling with dplyr\n1:40 - 2:10 | Visualizaing Revenue Trands with ggplot2 & Exploring Plots",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Core Admin - Wrangling & Visualizing iLab Revenue</span>"
     ]
