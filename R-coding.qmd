@@ -59,6 +59,19 @@ mix_vec <- c(1, "the", 2, "cow", 3, "moos")
 print(mix_vec)
 ```
 
+### Comments
+
+And to help us understand our code later, we add "comments" which start with a hashtag `#`
+
+```{r}
+# Comments can be an entire line, or come at the end of code
+
+# Create a mixed type vector (for a demo)
+mix_vec <- c(1, "the", 2, "cow", 3, "moos") # commas separate values
+
+print(mix_vec)
+```
+
 ### DataFrames: R's Excel Table Data Object
 Vectors are very useful and a core object type in R. Many other useful objects are built on top of vectors. However, the most common type
 of data we deal with in R will be DataFrames/Tibbles. DataFrames (or the modern equivalent Tibbles, used in tidyverse) are the R equivalent of tables in Excel.
