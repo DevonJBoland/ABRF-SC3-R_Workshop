@@ -34,7 +34,7 @@ We are going to download our revenue reports from iLab for FY26. If you do not h
 ### Load in iLab Data
 Now let's load in our data as have done previously:
 ```{r}
-ilab_raw <- read.csv("data/module3_FY26_full.csv", header = TRUE)
+ilab_raw <- read.csv("data/module3_FY26_full.csv")
 ```
 
 ### Clean iLab Data
