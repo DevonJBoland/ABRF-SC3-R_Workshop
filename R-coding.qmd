@@ -160,13 +160,13 @@ print(paste0("Total Revenue: $", sum(csv_data$Revenue)))
 
 Functions in R and many other programming languages are evaluated "inside first".
 
-So, if you see this:
+This can get to look really messy sometimes, like this:
 
     print(sqrt(sum(sqrt(100),26)))
 
 What is even going on here?
 
-It's basically like the following
+It's basically the following:
 
     print(sqrt(sum(sqrt(100),26))) # sqrt(100)  gets replaced by 10
     print(sqrt(sum(10,26)))        # sum(10,26) gets replaced by 36
@@ -175,21 +175,30 @@ It's basically like the following
 
 So, the first function that we see, reading left-to-right, is actually the last one that runs.
 
-This is where pipes can be helpful. They take their input from the left and put it in as the first argument in the function on their right. Here's the same code written with the native pipe:
+This is where pipes can be helpful. They take their input from the left and put it in as the first argument in the function on their right. Here's the same code written with the native pipe `|>`:
 
-    100 |> sqrt() |> sum(26) |> sqrt() |> print()
+    sqrt(100) |> sum(26) |> sqrt() |> print()
 
-Now, reading left to right, we see things happen in the same order that they are written
+Or, with each step on its own line:
 
-We take the square root of 100, add that result to 26, take the square root of that answer, and then print it.
-
-Here is the same thing, but with one pipe symbol per line:
-
-    100 |>
-     sqrt() |>
-     sum(26) |>
-     sqrt() |>
+    sqrt(100) |>
+     sum(26)  |>
+     sqrt()   |>
      print()
+
+Now, reading left-to-right or top-to-bottom, we see things happen in the same order that they are written.
+
+* take the square root of 100
+* add that result to 26
+* take the square root of that answer
+* and then print it.
+
+Same thing, but with in-line comments:
+
+    sqrt(100) |>            # take the square root of 100           # 10
+     sum(26)  |>            # add that result to 26                 # 36
+     sqrt()   |>            # take the square root of that answer   #  6
+     print()                # print the final result
 
 ### Next: Real world example
 
