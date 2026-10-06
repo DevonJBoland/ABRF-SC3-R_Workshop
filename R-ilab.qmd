@@ -41,9 +41,9 @@ ilab_raw <- read.csv("data/module3_FY26_full.csv", header = TRUE)
 We have our iLab data loaded into memory and stored in the vairable `ilab_raw`. However, if we inspect the data we will notice it is full of `n/a`, or just empty data points throughout the columns of the dataframe. We need to clean up the data and get it in a state that is useful for reporting an more informative for plotting.
 
 We are going to accomplish this using the `dplyr` package bundled with `tidyverse`. Our goals are to:
-* Filter out internal test accounts `(Customer Name != "Test Account")`, and unpaid/cancelled invoices `(payment_status == "Paid")`.
-* Parse timestamps into `Month` and `Quarter` using `lubridate` functions.
-* Format date categories cleanly for downstream visualization.
+* Filter out internal test accounts `(Customer Name != "Test Account")`, and unpaid/cancelled invoices `(payment_status == "Paid")`.  
+* Parse timestamps into `Month` and `Quarter` using `lubridate` functions.  
+* Format date categories cleanly for downstream visualization.  
 
 ```{r}
 cleaned_revenue_data <- ilab_raw |>
