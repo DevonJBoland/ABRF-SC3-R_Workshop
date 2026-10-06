@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Devon J. Boland">
-<meta name="dcterms.date" content="2026-10-01">
+<meta name="dcterms.date" content="2026-10-06">
 
 <title>4&nbsp; Core Admin - Wrangling &amp; Visualizing iLab Revenue – SC3 ABRF R Workshop</title>
 <style>
@@ -238,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 1, 2026</p>
+      <p class="date">October 6, 2026</p>
     </div>
   </div>
   
@@ -296,7 +296,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="clean-ilab-data" class="level3" data-number="4.3.3">
 <h3 data-number="4.3.3" class="anchored" data-anchor-id="clean-ilab-data"><span class="header-section-number">4.3.3</span> Clean iLab Data</h3>
 <p>We have our iLab data loaded into memory and stored in the vairable <code>ilab_raw</code>. However, if we inspect the data we will notice it is full of <code>n/a</code>, or just empty data points throughout the columns of the dataframe. We need to clean up the data and get it in a state that is useful for reporting an more informative for plotting.</p>
-<p>We are going to accomplish this using the <code>dplyr</code> package bundled with <code>tidyverse</code>. Our goals are to: * Filter out internal test accounts <code>(Customer Name != "Test Account")</code>, and unpaid/cancelled invoices <code>(payment_status == "Paid")</code>. * Parse timestamps into <code>Month</code> and <code>Quarter</code> using <code>lubridate</code> functions. * Format date categories cleanly for downstream visualization.</p>
+<p>We are going to accomplish this using the <code>dplyr</code> package bundled with <code>tidyverse</code>. Our goals are to:</p>
+<ul>
+<li>Filter out internal test accounts <code>(Customer Name != "Test Account")</code>, and unpaid/cancelled invoices <code>(payment_status == "Paid")</code>.<br>
+</li>
+<li>Parse timestamps into <code>Month</code> and <code>Quarter</code> using <code>lubridate</code> functions.<br>
+</li>
+<li>Format date categories cleanly for downstream visualization.</li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cleaned_revenue_data <span class="ot">&lt;-</span> ilab_raw <span class="sc">|&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
