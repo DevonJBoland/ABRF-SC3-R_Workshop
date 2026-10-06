@@ -156,4 +156,41 @@ print(paste0("Total Sales: $", sum(csv_data$Sales)))
 print(paste0("Total Revenue: $", sum(csv_data$Revenue)))
 ```
 
+### Pipes
+
+Functions in R and many other programming languages are evaluated "inside first".
+
+So, if you see this:
+
+    print(sqrt(sum(sqrt(100),26)))
+
+What is even going on here?
+
+It's basically like the following
+
+    print(sqrt(sum(sqrt(100),26))) # sqrt(100)  gets replaced by 10
+    print(sqrt(sum(10,26)))        # sum(10,26) gets replaced by 36
+    print(sqrt(36))                # sqrt(36)   gets replaced by 6
+    print(6)                       # Prints the answer: 6
+
+So, the first function that we see, reading left-to-right, is actually the last one that runs.
+
+This is where pipes can be helpful. They take their input from the left and put it in as the first argument in the function on their right. Here's the same code written with the native pipe:
+
+    100 |> sqrt() |> sum(26) |> sqrt() |> print()
+
+Now, reading left to right, we see things happen in the same order that they are written
+
+We take the square root of 100, add that result to 26, take the square root of that answer, and then print it.
+
+Here is the same thing, but with one pipe symbol per line:
+
+    100 |>
+     sqrt() |>
+     sum(26) |>
+     sqrt() |>
+     print()
+
+### Next: Real world example
+
 Now that we have gotten some exposure on loading, manipulating, and messing around with data in R. Let's move on to a real-world example in the next section!
