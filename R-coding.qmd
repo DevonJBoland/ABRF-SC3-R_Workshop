@@ -61,7 +61,7 @@ print(mix_vec)
 
 ### Comments
 
-And to help us understand our code later, we add "comments" which start with a hashtag `#`
+And to help us understand our code later, we add "comments" which start with a hashtag `#`. When our script runs, comments don't actually do anything. However, they help document our code so that later on we know what we are reviewing our code, we can see what were thinking when we wrote it.
 
 ```{r}
 # Comments can be an entire line, or come at the end of code
