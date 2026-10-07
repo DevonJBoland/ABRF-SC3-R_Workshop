@@ -25,8 +25,8 @@ library(readxl)
 library(ggplot2)
 ```
 
-## QC Data Wrangling & Clenaing
-Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let's go over how to load an Excel file. Earlier we loaded the `readxl` package which allows us to do so. For this portion we have simulated data we will use, but this can be exapnded to any operational instrument information. You can download a copy of the data [here](INSERT_LINK_HERE).
+## QC Data Wrangling & Cleaning
+Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let's go over how to load an Excel file. Earlier we loaded the `readxl` package which allows us to do so. For this portion we have simulated data we will use, but this can be expanded to any operational instrument information. You can download a copy of the data [here](INSERT_LINK_HERE).
 ```{r}
 ms_raw <- read_csv("data/mass_spec_qc_logs.csv", show_col_types = FALSE)
 ngs_raw <- read_excel("data/genomics_core_ops.xlsx")
@@ -97,7 +97,7 @@ What if we suspect there is a problem with our mass spec calibration drifting, o
 ### Fit linear model per instrument
 We will use the `lm()` function the base R package `stats`. It fits a linear model to a specified dataset, and then can be used for myriad of tasks such as regression, analysis of variance, and even analysis of covariance.
 
-Then, we'll extract the model coefficients with the `coef()` function. Look closely in the code block below. Do you recongize certain dataframe manipulation techniques we used earlier in the workshop. If you are having a hard time visualizing what values we are pulling you can always inspect the output try it for yourself?
+Then, we'll extract the model coefficients with the `coef()` function. Look closely in the code block below. Do you recognize certain dataframe manipulation techniques we used earlier in the workshop. If you are having a hard time visualizing what values we are pulling you can always inspect the output try it for yourself?
 
 ```{r}
 drift_models <- ms_clean |> 
@@ -111,7 +111,7 @@ drift_models <- ms_clean |>
 drift_models
 ```
 
-### Visualizaing Linear Model with `ggplot2` Line Graphs
+### Visualizing Linear Model with `ggplot2` Line Graphs
 Now that our data is clean, we will aggregate revenue trends and build report-ready figures.
 ```{r}
 ggplot(ms_clean, aes(x = Run_Date, y = Mass_Accuracy_PPM, color = Instrument_ID)) +
@@ -135,7 +135,7 @@ ggplot(ms_clean, aes(x = Run_Date, y = Mass_Accuracy_PPM, color = Instrument_ID)
 ```
 
 ## Analysing Variance of $Q30$ Scores from Different Sequencers
-Finally, we are interested in visualizing the differences in project >$Q30$ base scoring across two of our sequencers. To acheive this we will plot the 
+Finally, we are interested in visualizing the differences in project >$Q30$ base scoring across two of our sequencers.
 ```{r}
 ggplot(ngs_raw, aes(x = Quality_Score_Q30, fill = Platform)) +
   geom_histogram(binwidth = 1, alpha = 0.7, position = "identity", color = "white") +
