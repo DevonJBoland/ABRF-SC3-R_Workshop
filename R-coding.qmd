@@ -8,6 +8,9 @@ author:
     affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
     email: "devonjboland@tamu.edu"
     corresponding: true
+  - name: "Christopher Bottoms"
+    affilitation: "Oklahoma Medical Research Foundation"
+    email: "Christopher-Bottoms@omrf.org"
 date: last-modified
 code-annotations: below
 ---
@@ -56,6 +59,19 @@ specifically as integers. You'll notice how we dropped the `""` marks as we inte
 However we can mix data types in vectors, lets see what happens when we try to mix numbers and strings:
 ```{r}
 mix_vec <- c(1, "the", 2, "cow", 3, "moos")
+print(mix_vec)
+```
+
+### Comments
+
+And to help us understand our code later, we add "comments" which start with a hashtag `#`. When our script runs, comments don't actually do anything. However, they help document our code so that later on we know what we are reviewing our code, we can see what were thinking when we wrote it.
+
+```{r}
+# Comments can be an entire line, or come at the end of code
+
+# Create a mixed type vector (for a demo)
+mix_vec <- c(1, "the", 2, "cow", 3, "moos") # commas separate values
+
 print(mix_vec)
 ```
 
@@ -142,5 +158,51 @@ print(paste0("Total Costs: $", sum(csv_data$Costs)))
 print(paste0("Total Sales: $", sum(csv_data$Sales)))
 print(paste0("Total Revenue: $", sum(csv_data$Revenue)))
 ```
+
+### Pipes
+
+Functions in R and many other programming languages are evaluated "inside first".
+
+This can get to look really messy sometimes, like this:
+
+    print(sqrt(sum(sqrt(100),26)))
+
+What is even going on here?
+
+It's basically the following:
+
+    print(sqrt(sum(sqrt(100),26))) # sqrt(100)  gets replaced by 10
+    print(sqrt(sum(10,26)))        # sum(10,26) gets replaced by 36
+    print(sqrt(36))                # sqrt(36)   gets replaced by 6
+    print(6)                       # Prints the answer: 6
+
+So, the first function that we see, reading left-to-right, is actually the last one that runs.
+
+This is where pipes can be helpful. They take their input from the left and put it in as the first argument in the function on their right. Here's the same code written with the native pipe `|>`:
+
+    sqrt(100) |> sum(26) |> sqrt() |> print()
+
+Or, with each step on its own line:
+
+    sqrt(100) |>
+     sum(26)  |>
+     sqrt()   |>
+     print()
+
+Now, reading left-to-right or top-to-bottom, we see things happen in the same order that they are written.
+
+* take the square root of 100
+* add that result to 26
+* take the square root of that answer
+* and then print it.
+
+Same thing, but with in-line comments:
+
+    sqrt(100) |>            # take the square root of 100           # 10
+     sum(26)  |>            # add that result to 26                 # 36
+     sqrt()   |>            # take the square root of that answer   #  6
+     print()                # print the final result
+
+### Next: Real world example
 
 Now that we have gotten some exposure on loading, manipulating, and messing around with data in R. Let's move on to a real-world example in the next section!

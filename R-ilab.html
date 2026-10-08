@@ -7,7 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Devon J. Boland">
-<meta name="dcterms.date" content="2026-10-06">
+<meta name="author" content="Christopher Bottoms">
+<meta name="dcterms.date" content="2026-10-07">
 
 <title>4&nbsp; Core Admin - Wrangling &amp; Visualizing iLab Revenue – SC3 ABRF R Workshop</title>
 <style>
@@ -219,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Authors</div>
   <div class="quarto-title-meta-heading">Affiliation</div>
   
     <div class="quarto-title-meta-contents">
@@ -230,6 +231,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             Texas A&amp;M Institute for Genome Sciences &amp; Society (TIGSS) - Bioinformatics Core, Texas A&amp;M University Vashist College of Medicine
           </p>
       </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Christopher Bottoms <a href="mailto:Christopher-Bottoms@omrf.org" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
   </div>
 
 <div class="quarto-title-meta">
@@ -238,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 6, 2026</p>
+      <p class="date">October 7, 2026</p>
     </div>
   </div>
   
@@ -284,13 +290,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In this segment, we process raw billing data from iLab systems. We will clean test accounts, focus on completed/paid transactions, use the standard R native pipe <code>|&gt;</code>, and parse timestamp strings into useful data features (<code>Months</code> and <code>Quarter</code>).</p>
 <section id="downloading-ilab-data" class="level3" data-number="4.3.1">
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="downloading-ilab-data"><span class="header-section-number">4.3.1</span> Downloading iLab Data</h3>
-<p>We are going to download our revenue reports from iLab for FY26. If you do not have access to this information in iLab, please use the data provided <a href="INSERTe GITHUB LINK to DATA Folder">here</a>.</p>
+<p>We are going to download our revenue reports from iLab for FY26. If you do not have access to this information in iLab, please use the data provided <a href="https://github.com/DevonJBoland/ABRF-SC3-R_Workshop/tree/main/data">here</a>.</p>
 </section>
 <section id="load-in-ilab-data" class="level3" data-number="4.3.2">
 <h3 data-number="4.3.2" class="anchored" data-anchor-id="load-in-ilab-data"><span class="header-section-number">4.3.2</span> Load in iLab Data</h3>
 <p>Now let’s load in our data as have done previously:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ilab_raw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/module3_FY26_full.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ilab_raw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/module3_FY26_full.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="clean-ilab-data" class="level3" data-number="4.3.3">

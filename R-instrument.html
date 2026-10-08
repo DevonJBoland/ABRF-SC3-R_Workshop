@@ -7,7 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Devon J. Boland">
-<meta name="dcterms.date" content="2026-10-01">
+<meta name="author" content="Christopher Bottoms">
+<meta name="dcterms.date" content="2026-10-07">
 
 <title>5&nbsp; Core Operations - Instrument QA/QC &amp; Analytics – SC3 ABRF R Workshop</title>
 <style>
@@ -220,7 +221,7 @@ window.Quarto = {
   <ul>
   <li><a href="#session-overview" id="toc-session-overview" class="nav-link active" data-scroll-target="#session-overview"><span class="header-section-number">5.1</span> Session Overview</a></li>
   <li><a href="#setup-required-packages" id="toc-setup-required-packages" class="nav-link" data-scroll-target="#setup-required-packages"><span class="header-section-number">5.2</span> Setup &amp; Required Packages</a></li>
-  <li><a href="#qc-data-wrangling-clenaing" id="toc-qc-data-wrangling-clenaing" class="nav-link" data-scroll-target="#qc-data-wrangling-clenaing"><span class="header-section-number">5.3</span> QC Data Wrangling &amp; Clenaing</a>
+  <li><a href="#qc-data-wrangling-cleaning" id="toc-qc-data-wrangling-cleaning" class="nav-link" data-scroll-target="#qc-data-wrangling-cleaning"><span class="header-section-number">5.3</span> QC Data Wrangling &amp; Cleaning</a>
   <ul class="collapse">
   <li><a href="#handling-missing-values-nas-from-failed-runs" id="toc-handling-missing-values-nas-from-failed-runs" class="nav-link" data-scroll-target="#handling-missing-values-nas-from-failed-runs"><span class="header-section-number">5.3.1</span> Handling Missing Values (<code>NA</code>s) from Failed Runs</a></li>
   </ul></li>
@@ -232,7 +233,7 @@ window.Quarto = {
   <li><a href="#tracking-instrument-drift-linear-regression" id="toc-tracking-instrument-drift-linear-regression" class="nav-link" data-scroll-target="#tracking-instrument-drift-linear-regression"><span class="header-section-number">5.5</span> Tracking Instrument Drift (Linear Regression)</a>
   <ul class="collapse">
   <li><a href="#fit-linear-model-per-instrument" id="toc-fit-linear-model-per-instrument" class="nav-link" data-scroll-target="#fit-linear-model-per-instrument"><span class="header-section-number">5.5.1</span> Fit linear model per instrument</a></li>
-  <li><a href="#visualizaing-linear-model-with-ggplot2-line-graphs" id="toc-visualizaing-linear-model-with-ggplot2-line-graphs" class="nav-link" data-scroll-target="#visualizaing-linear-model-with-ggplot2-line-graphs"><span class="header-section-number">5.5.2</span> Visualizaing Linear Model with <code>ggplot2</code> Line Graphs</a></li>
+  <li><a href="#visualizing-linear-model-with-ggplot2-line-graphs" id="toc-visualizing-linear-model-with-ggplot2-line-graphs" class="nav-link" data-scroll-target="#visualizing-linear-model-with-ggplot2-line-graphs"><span class="header-section-number">5.5.2</span> Visualizing Linear Model with <code>ggplot2</code> Line Graphs</a></li>
   </ul></li>
   <li><a href="#analysing-variance-of-q30-scores-from-different-sequencers" id="toc-analysing-variance-of-q30-scores-from-different-sequencers" class="nav-link" data-scroll-target="#analysing-variance-of-q30-scores-from-different-sequencers"><span class="header-section-number">5.6</span> Analysing Variance of <span class="math inline">\(Q30\)</span> Scores from Different Sequencers</a></li>
   <li><a href="#summary-checklist" id="toc-summary-checklist" class="nav-link" data-scroll-target="#summary-checklist"><span class="header-section-number">5.7</span> Summary Checklist</a></li>
@@ -249,7 +250,7 @@ window.Quarto = {
 
 
 <div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Authors</div>
   <div class="quarto-title-meta-heading">Affiliation</div>
   
     <div class="quarto-title-meta-contents">
@@ -260,6 +261,11 @@ window.Quarto = {
             Texas A&amp;M Institute for Genome Sciences &amp; Society (TIGSS) - Bioinformatics Core, Texas A&amp;M University Vashist College of Medicine
           </p>
       </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Christopher Bottoms <a href="mailto:Christopher-Bottoms@omrf.org" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
   </div>
 
 <div class="quarto-title-meta">
@@ -268,7 +274,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 1, 2026</p>
+      <p class="date">October 7, 2026</p>
     </div>
   </div>
   
@@ -312,9 +318,9 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="qc-data-wrangling-clenaing" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="qc-data-wrangling-clenaing"><span class="header-section-number">5.3</span> QC Data Wrangling &amp; Clenaing</h2>
-<p>Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let’s go over how to load an Excel file. Earlier we loaded the <code>readxl</code> package which allows us to do so. For this portion we have simulated data we will use, but this can be exapnded to any operational instrument information. You can download a copy of the data <a href="INSERT_LINK_HERE">here</a>.</p>
+<section id="qc-data-wrangling-cleaning" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="qc-data-wrangling-cleaning"><span class="header-section-number">5.3</span> QC Data Wrangling &amp; Cleaning</h2>
+<p>Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let’s go over how to load an Excel file. Earlier we loaded the <code>readxl</code> package which allows us to do so. For this portion we have simulated data we will use, but this can be expanded to any operational instrument information. You can download a copy of the data <a href="https://github.com/DevonJBoland/ABRF-SC3-R_Workshop/tree/main/data">here</a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="annotated-cell-4"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-4-1"><a href="#annotated-cell-4-1" aria-hidden="true" tabindex="-1"></a>ms_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/mass_spec_qc_logs.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
 <span id="annotated-cell-4-2"><a href="#annotated-cell-4-2" aria-hidden="true" tabindex="-1"></a>ngs_raw <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/genomics_core_ops.xlsx"</span>)</span>
@@ -446,7 +452,7 @@ sample estimates:
 <section id="fit-linear-model-per-instrument" class="level3" data-number="5.5.1">
 <h3 data-number="5.5.1" class="anchored" data-anchor-id="fit-linear-model-per-instrument"><span class="header-section-number">5.5.1</span> Fit linear model per instrument</h3>
 <p>We will use the <code>lm()</code> function the base R package <code>stats</code>. It fits a linear model to a specified dataset, and then can be used for myriad of tasks such as regression, analysis of variance, and even analysis of covariance.</p>
-<p>Then, we’ll extract the model coefficients with the <code>coef()</code> function. Look closely in the code block below. Do you recongize certain dataframe manipulation techniques we used earlier in the workshop. If you are having a hard time visualizing what values we are pulling you can always inspect the output try it for yourself?</p>
+<p>Then, we’ll extract the model coefficients with the <code>coef()</code> function. Look closely in the code block below. Do you recognize certain dataframe manipulation techniques we used earlier in the workshop. If you are having a hard time visualizing what values we are pulling you can always inspect the output try it for yourself?</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>drift_models <span class="ot">&lt;-</span> ms_clean <span class="sc">|&gt;</span> </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Instrument_ID) <span class="sc">|&gt;</span> </span>
@@ -466,8 +472,8 @@ sample estimates:
 </div>
 </div>
 </section>
-<section id="visualizaing-linear-model-with-ggplot2-line-graphs" class="level3" data-number="5.5.2">
-<h3 data-number="5.5.2" class="anchored" data-anchor-id="visualizaing-linear-model-with-ggplot2-line-graphs"><span class="header-section-number">5.5.2</span> Visualizaing Linear Model with <code>ggplot2</code> Line Graphs</h3>
+<section id="visualizing-linear-model-with-ggplot2-line-graphs" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="visualizing-linear-model-with-ggplot2-line-graphs"><span class="header-section-number">5.5.2</span> Visualizing Linear Model with <code>ggplot2</code> Line Graphs</h3>
 <p>Now that our data is clean, we will aggregate revenue trends and build report-ready figures.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ms_clean, <span class="fu">aes</span>(<span class="at">x =</span> Run_Date, <span class="at">y =</span> Mass_Accuracy_PPM, <span class="at">color =</span> Instrument_ID)) <span class="sc">+</span></span>
@@ -507,7 +513,7 @@ Ignoring unknown parameters: `linestyle`</code></pre>
 </section>
 <section id="analysing-variance-of-q30-scores-from-different-sequencers" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="analysing-variance-of-q30-scores-from-different-sequencers"><span class="header-section-number">5.6</span> Analysing Variance of <span class="math inline">\(Q30\)</span> Scores from Different Sequencers</h2>
-<p>Finally, we are interested in visualizing the differences in project &gt;<span class="math inline">\(Q30\)</span> base scoring across two of our sequencers. To acheive this we will plot the</p>
+<p>Finally, we are interested in visualizing the differences in project &gt;<span class="math inline">\(Q30\)</span> base scoring across two of our sequencers.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ngs_raw, <span class="fu">aes</span>(<span class="at">x =</span> Quality_Score_Q30, <span class="at">fill =</span> Platform)) <span class="sc">+</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
