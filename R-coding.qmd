@@ -8,6 +8,9 @@ author:
     affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
     email: "devonjboland@tamu.edu"
     corresponding: true
+  - name: "Christopher Bottoms"
+    affilitation: "Oklahoma Medical Research Foundation"
+    email: "Christopher-Bottoms@omrf.org"
 date: last-modified
 code-annotations: below
 ---

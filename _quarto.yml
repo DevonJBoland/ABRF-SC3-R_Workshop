@@ -7,7 +7,7 @@ project:
 
 book:
   title: "SC3 ABRF R Workshop"
-  author: "Devon J. Boland"
+  author: "Devon J. Boland & Christopher Bottoms"
   sidebar:
     style: "docked"
     search: true

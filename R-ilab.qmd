@@ -8,6 +8,9 @@ author:
     affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
     email: "devonjboland@tamu.edu"
     corresponding: true
+  - name: "Christopher Bottoms"
+    affilitation: "Oklahoma Medical Research Foundation"
+    email: "Christopher-Bottoms@omrf.org"
 date: last-modified
 code-annotations: below
 ---
@@ -29,7 +32,7 @@ library(ggplot2)
 In this segment, we process raw billing data from iLab systems. We will clean test accounts, focus on completed/paid transactions, use the standard R native pipe `|>`, and parse timestamp strings into useful data features (`Months` and `Quarter`).
 
 ### Downloading iLab Data
-We are going to download our revenue reports from iLab for FY26. If you do not have access to this information in iLab, please use the data provided [here](INSERTe GITHUB LINK to DATA Folder).
+We are going to download our revenue reports from iLab for FY26. If you do not have access to this information in iLab, please use the data provided [here](https://github.com/DevonJBoland/ABRF-SC3-R_Workshop/tree/main/data).
 
 ### Load in iLab Data
 Now let's load in our data as have done previously:

@@ -8,6 +8,9 @@ author:
     affiliation: "Texas A&M Institute for Genome Sciences & Society (TIGSS) - Bioinformatics Core, Texas A&M University Vashist College of Medicine"
     email: "devonjboland@tamu.edu"
     corresponding: true
+  - name: "Christopher Bottoms"
+    affilitation: "Oklahoma Medical Research Foundation"
+    email: "Christopher-Bottoms@omrf.org"
 date: last-modified
 code-annotations: below
 ---
@@ -26,7 +29,7 @@ library(ggplot2)
 ```
 
 ## QC Data Wrangling & Cleaning
-Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let's go over how to load an Excel file. Earlier we loaded the `readxl` package which allows us to do so. For this portion we have simulated data we will use, but this can be expanded to any operational instrument information. You can download a copy of the data [here](INSERT_LINK_HERE).
+Typically, equipment run information or logs will be stored as CSV or Excel-formatted files. We have already seen how to load a CSV file in R, but let's go over how to load an Excel file. Earlier we loaded the `readxl` package which allows us to do so. For this portion we have simulated data we will use, but this can be expanded to any operational instrument information. You can download a copy of the data [here](https://github.com/DevonJBoland/ABRF-SC3-R_Workshop/tree/main/data).
 ```{r}
 ms_raw <- read_csv("data/mass_spec_qc_logs.csv", show_col_types = FALSE)
 ngs_raw <- read_excel("data/genomics_core_ops.xlsx")
